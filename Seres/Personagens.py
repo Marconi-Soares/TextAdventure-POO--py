@@ -9,7 +9,7 @@ class Jogador:
         self._nivel = nivel
 
         self._xp = 0
-        self._rating = self.nivel * (1 + 30 / 100) * 10
+        self._rating = (5 * (self.nivel - 1) * self.nivel) + (self.nivel * (1 + 30 / 100) * 10)
 
         self._nome = nome
 
@@ -19,7 +19,12 @@ class Jogador:
 
         self._atk = None
         self._baseATK = None
+
+        self._defesa = 0
+
         self._inv = {}
+        self._usavel = {}
+        self._equip = {}
 
     # GETTERS
     # Atributos gerais
@@ -69,6 +74,14 @@ class Jogador:
     def baseATK(self):
         return self._baseATK
 
+    @property
+    def defesa(self):
+        return self._defesa
+
+    @property
+    def usavel(self):
+        return self._usavel
+
 
     #SETTERS
     #Atributos gerais
@@ -114,8 +127,18 @@ class Jogador:
     def baseATK(self, valor: int):
         self._baseATK = valor
 
+    @defesa.setter
+    def defesa(self, valor):
+        self.defesa = valor
+
+    @usavel.setter
+    def usavel(self, valor):
+        self._usavel = valor
+
 
     #METODOS
+
+    #GERAIS
     def status(self):
         print(f'+{"-" * 29}+\n'
               f'| Nome: {self.nome:>21} |\n'
@@ -123,7 +146,7 @@ class Jogador:
               f'|{"-" * 29}|\n'
               f'| Nivel: {self.nivel:>20} |\n'
               f'| Prox Nível: {f"[{self.xp:.0f} / {self.rating:.0f}]":>15} |\n'
-              f'| Saúde: {self.hp:>20} |\n'
+              f'| Saúde: {f"[{self.hp:.0f} / {self.maxHP:.0f}]":>20} |\n'
               f'| Ataque: {self.atk:>19} |\n'
               f'+{"-" * 29}+\n')
 
@@ -148,20 +171,95 @@ class Jogador:
             pontos = self.xp
 
             #atualiza o rating para o nivel atual do personagem.
-            self.rating = self.nivel * (1 + 30 / 100) * 10
+            self.rating = (5 * (self.nivel - 1) * self.nivel)  + (self.nivel * (1 + 30 / 100) * 10)
+
+    #ITENS
+    def inventario(self):
+        print(f'{"INVENTÁRIO":^50}')
+        for item in self.inv.keys():
+            print(f'+{"-" * 50}+\n'
+                  f'|{" " * 5}{item:<45}|')
+        print(f'+{"-" * 50}+')
+
+    def pegar(self, item):
+        if not item.nome in self.inv.keys():
+            self.inv.update({item.nome: item})
+        else:
+            print('Você não já tem este item...')
+
+    def destruir(self, item):
+        if item in self.inv.keys():
+            while True:
+                opcao = input(f'Digite SiM para destruir {item.nome} PERMANENTEMENTE\nou N para não destruí-lo.: ')
+                if opcao == 'SiM':
+                    del self.inv[item]
+
+                    print(item, ' destruido para sempre.')
+                    break
+
+                elif opcao == 'N':
+                    print(item.nome, 'não foi destruido.')
+                    break
+
+                else:
+                    print(opcao, 'não é uma escolha válida.')
+        else:
+            print('Parece que você não tem esse item.\n(DIGITE EXATAMENTE O NOME DO ITEM QUE DESEJA LARGAR)')
+
+    def equipar(self, item):
+        #Se o item está no inventário
+        if item in self.inv.keys():
+            item = self.inv[item]
+
+            #Se a classe pode utilizar o item.
+            if item.tipo in self.usavel.keys():
+
+                #Se não estiver usando um item do tipo.
+                if not self.usavel[item.tipo]:
+                    self.usavel[item.tipo] = True
+                    print('Equipando', item.nome)
+
+                else:
+                    print('Você já está usando', item.tipo)
+
+            else:
+                print('Esta classe não pode utilizar este item.')
+
+        else:
+            print('Você não possui este item. (VERIFIQUE O NOME DIGITADO)')
+
+    def retirar(self, item):
+        if self.usavel[item]:
+            print(item, 'retirado com sucesso.')
+            self.usavel[item] = False
+
+        else:
+            print('Não há', item, 'para retirar')
 
 
 class Guerreiro(Jogador):
     def __init__(self, nome, nivel=1):
         super().__init__(nome, nivel)
+        self.setUtilizaveis()
+
         #HP
         self.baseHP = 10
-        self.hp = 60 + (self.baseHP * self.nivel)
+        self.hp = 50 + (self.baseHP * self.nivel)
         self.maxHP = self.hp
 
         #ATK
         self.baseATK = 2
         self.atk = 0 + (self.baseATK * self.nivel)
+
+
+    #METODOS
+    def setUtilizaveis(self):
+        self.usavel.update({'Helmo': False})
+        self.usavel.update({'Peitoral': False})
+        self.usavel.update({'Braceletes': False})
+        self.usavel.update({'Calças': False})
+        self.usavel.update({'Caneleiras': False})
+        self.usavel.update({'Botas': False})
 
 
 class Mago(Jogador):
@@ -181,10 +279,10 @@ class Bestial(Jogador):
     def __init__(self, nome, nivel=1):
         super().__init__(nome, nivel)
         #HP
-        self.baseHP = 2
-        self.hp = 30 + (self.baseHP * self.nivel)
+        self.baseHP = 4
+        self.hp = 45 + (self.baseHP * self.nivel)
         self.maxHP = self.hp
 
         #ATK
-        self.baseATK = 10
+        self.baseATK = 8
         self.atk = 5 + (self.baseATK * self.nivel)
