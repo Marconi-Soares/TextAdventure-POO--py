@@ -36,6 +36,7 @@ class Jogador:
     def nome(self):
         return self._nome
 
+
     #Atributos de Nível
     @property
     def nivel(self):
@@ -48,6 +49,7 @@ class Jogador:
     @property
     def rating(self):
         return self._rating
+
 
     # Atributos uteis
     @property
@@ -140,15 +142,15 @@ class Jogador:
 
     #GERAIS
     def status(self):
-        print(f'+{"-" * 29}+\n'
-              f'| Nome: {self.nome:>21} |\n'
-              f'| Classe: {self.classe:>19} |\n'
-              f'|{"-" * 29}|\n'
-              f'| Nivel: {self.nivel:>20} |\n'
-              f'| Prox Nível: {f"[{self.xp:.0f} / {self.rating:.0f}]":>15} |\n'
-              f'| Saúde: {f"[{self.hp:.0f} / {self.maxHP:.0f}]":>20} |\n'
-              f'| Ataque: {self.atk:>19} |\n'
-              f'+{"-" * 29}+\n')
+        print(f'+{"-" * 39}+\n'
+              f'| Nome: {self.nome:>31} |\n'
+              f'| Classe: {self.classe:>29} |\n'
+              f'|{"-" * 39}|\n'
+              f'| Nivel: {self.nivel:>30} |\n'
+              f'| Prox Nível: {f"[{self.xp:.0f} / {self.rating:.0f}]":>25} |\n'
+              f'| Saúde: {f"[{self.hp:.0f} / {self.maxHP:.0f}]":>30} |\n'
+              f'| Ataque: {self.atk:>29} |\n'
+              f'+{"-" * 39}+\n')
 
     def uppar(self, pontos: int):
 
@@ -218,6 +220,8 @@ class Jogador:
                 if not self.usavel[item.tipo]:
                     self.usavel[item.tipo] = True
                     print('Equipando', item.nome)
+                    self.ativarItem(item)
+
 
                 else:
                     print('Você já está usando', item.tipo)
@@ -235,6 +239,16 @@ class Jogador:
 
         else:
             print('Não há', item, 'para retirar')
+
+    def ativarItem(self, item):
+        if item.tipo_de_efeito == '+ HP':
+            self.maxHP += item.efeito
+
+        if item.tipo_de_efeito == '+ ATK':
+            self.atk += item.efeito
+
+        if item.tipo_de_efeito == '+ DFS':
+            self.defesa += self.defesa
 
 
 class Guerreiro(Jogador):
@@ -260,6 +274,18 @@ class Guerreiro(Jogador):
         self.usavel.update({'Calças': False})
         self.usavel.update({'Caneleiras': False})
         self.usavel.update({'Botas': False})
+        self.usavel.update({'Espada': False})
+        self.usavel.update({'Escudo': False})
+
+
+    #ATAQUES
+    def ataque_basico(self, alvo):
+        alvo.hp -= self.atk
+        if alvo.hp <= 0:
+            print(f'{alvo.nome} foi derrotado(a).')
+
+
+
 
 
 class Mago(Jogador):

@@ -1,7 +1,10 @@
+from random import randint
+
 class Animal:
     def __init__(self, nivel):
         self.__nome = None
         self.nivel = nivel
+        self._vivo = True
 
         self._hp = 0
         self._atk = 0
@@ -11,6 +14,10 @@ class Animal:
     @property
     def nome(self):
         return self.__nome
+
+    @property
+    def vivo(self):
+        return self._vivo
 
     @property
     def hp(self):
@@ -41,6 +48,15 @@ class Animal:
     def recompensa(self, valor):
         self.__recompensa = valor
 
+    @vivo.setter
+    def vivo(self, valor):
+        self._vivo = valor
+
+    #Metodos
+    def esta_vivo(self):
+        if self.hp <= 0:
+            self.vivo = False
+
 
 class Lobo(Animal):
     def __init__(self, nivel):
@@ -50,6 +66,10 @@ class Lobo(Animal):
         self.hp = 3 * self.nivel
         self.atk = 2 * self.nivel
         self.recompensa *= 2
+
+    def ataque(self, alvo):
+        indice = randint(50, 100)/100
+        alvo.hp -= (indice * self.atk)
 
 
 class LoboAlfa(Animal):

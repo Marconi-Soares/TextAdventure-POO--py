@@ -11,8 +11,10 @@ class MateriaPrima:
         self._nivel = nivel
         self._nome = None
         self._tipo = None
+        self._tipo_de_efeito = None
         self._invstatus = ''
         self._material = material
+
         if material == 'Trapos':
             self._indice = 1
         elif material == 'Aço':
@@ -43,6 +45,10 @@ class MateriaPrima:
         return self._tipo
 
     @property
+    def tipo_de_efeito(self):
+        return self._tipo_de_efeito
+
+    @property
     def efeito(self):
         return self._efeito
 
@@ -51,6 +57,7 @@ class MateriaPrima:
         return self._nivel
 
 
+    #Setter
     @nivel.setter
     def nivel(self, valor):
         self._nivel = valor
@@ -75,15 +82,21 @@ class MateriaPrima:
     def tipo(self, valor):
         self._tipo = valor
 
+    @tipo_de_efeito.setter
+    def tipo_de_efeito(self, valor):
+        self._tipo_de_efeito = valor
+
     @invstatus.setter
     def invstatus(self, valor):
         self._invstatus = valor
+
 
 
 class Helmo(MateriaPrima):
     def __init__(self, material, nivel):
         super().__init__(material, nivel)
         self.tipo = 'Helmo'
+        self.tipo_de_efeito = '+ HP'
         self.nome = 'Helmo de ' + material + ' Nível: ' + str(self.nivel)
         self.efeito *= 2
 
@@ -92,6 +105,7 @@ class Peitoral(MateriaPrima):
     def __init__(self, material, nivel):
         super().__init__(material, nivel)
         self.tipo = 'Peitoral'
+        self.tipo_de_efeito = '+ HP'
         self.nome = 'Peitoral de ' + material + ' Nível: ' + str(self.nivel)
         self.efeito *= 5
 
@@ -100,6 +114,7 @@ class Braceletes(MateriaPrima):
     def __init__(self, material, nivel):
         super().__init__(material, nivel)
         self.tipo = 'Braceletes'
+        self.tipo_de_efeito = '+ HP'
         self.nome = 'Braceletes de ' + material + ' Nível: ' + str(self.nivel)
         self.efeito *= 1
 
@@ -108,6 +123,7 @@ class Calcas(MateriaPrima):
     def __init__(self, material, nivel):
         super().__init__(material, nivel)
         self.tipo = 'Calças'
+        self.tipo_de_efeito = '+ HP'
         self.nome = 'Calças de ' + material + ' Nível: ' + str(self.nivel)
         self.efeito *= 3
 
@@ -116,6 +132,7 @@ class Caneleiras(MateriaPrima):
     def __init__(self, material, nivel):
         super().__init__(material, nivel)
         self.tipo = 'Caneleiras'
+        self.tipo_de_efeito = '+ HP'
         self.nome = 'Caneleiras de ' + material + ' Nível: ' + str(self.nivel)
         self.efeito *= 1
 
@@ -124,6 +141,7 @@ class Botas(MateriaPrima):
     def __init__(self, material, nivel):
         super().__init__(material, nivel)
         self.tipo = 'Botas'
+        self.tipo_de_efeito = '+ HP'
         self.nome = 'Botas de ' + material + ' Nível: ' + str(self.nivel)
         self.efeito *= 2
 
@@ -132,6 +150,7 @@ class Espada(MateriaPrima):
     def __init__(self, material, nivel=1):
         super().__init__(material, nivel)
         self.tipo = 'Espada'
+        self.tipo_de_efeito = '+ ATK'
         self.nivel = nivel
         self.nome = 'Espada de ' + material + ' Nível: ' + str(self.nivel)
         self.efeito *= 1
@@ -141,6 +160,7 @@ class Escudo(MateriaPrima):
     def __init__(self, material, nivel=1):
         super().__init__(material, nivel)
         self.tipo = 'Escudo'
+        self.tipo_de_efeito = '+ DFS'
         self.nivel = nivel
         self.nome = 'Espada de ' + material + ' Nível: ' + str(self.nivel)
         self.efeito *= 3
